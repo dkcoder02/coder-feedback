@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return Response.json(
         {
           success: false,
-          message: "User already exists",
+          message: "Username is already taken",
         },
         {
           status: 400,
@@ -28,10 +28,10 @@ export async function POST(request: NextRequest) {
     }
 
     const existingUserByEmail = await UserModel.findOne({ email });
-    const verifyCode = Math.floor(100000 + Math.random() * 99999).toString();
+
+    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
     const hashedPassword = await bcrypt.hash(password, 10);
-    const expiryCodeDate = new Date();
-    expiryCodeDate.setDate(expiryCodeDate.getHours() + 1);
+    const expiryDate = new Date(Date.now() + 3600000);
 
     if (existingUserByEmail) {
       if (existingUserByEmail.isVerified) {
@@ -45,10 +45,9 @@ export async function POST(request: NextRequest) {
           }
         );
       } else {
-        existingUserByEmail.isVerified = true;
         existingUserByEmail.verifyCode = verifyCode;
         existingUserByEmail.password = hashedPassword;
-        existingUserByEmail.verifyCodeExpiry = expiryCodeDate;
+        existingUserByEmail.verifyCodeExpiry = expiryDate;
         await existingUserByEmail.save();
       }
     } else {
@@ -57,15 +56,14 @@ export async function POST(request: NextRequest) {
         email,
         password: hashedPassword,
         verifyCode,
-        verifyCodeExpiry: expiryCodeDate,
+        verifyCodeExpiry: expiryDate,
         messages: [],
       });
 
       await newUser.save();
     }
 
-    //send verification emails
-
+    //*send verification emails
     const emailResponse = await sendVerificationEmail(
       username,
       email,
@@ -87,18 +85,16 @@ export async function POST(request: NextRequest) {
     return Response.json(
       {
         success: true,
-        message: "User registered successfully. Please verify email",
+        message: "User registered successfully. Please verify your account.",
       },
-      {
-        status: 201,
-      }
+      { status: 201 }
     );
   } catch (error) {
     console.error("Error Registering User", error);
     return Response.json(
       {
         success: false,
-        message: "Error Registering User",
+        message: "Error registering user",
       },
       {
         status: 500,
