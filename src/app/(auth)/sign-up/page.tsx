@@ -22,12 +22,12 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
-function page() {
+export default function SignUp() {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
   const [isUsernameChecking, setIsUsernameChecking] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const debounced = useDebounceCallback(setUsername, 200);
+  const debounced = useDebounceCallback(setUsername, 1000);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -76,7 +76,7 @@ function page() {
         title: response.data.success ? "Success" : "Error",
         description: response.data.message,
       });
-      router.replace(`/verify-code/${username}`);
+      router.replace(`/verify/${username}`);
       setIsSubmitting(false);
     } catch (error) {
       console.error("Error Registering User", error);
@@ -187,5 +187,3 @@ function page() {
     </div>
   );
 }
-
-export default page;
