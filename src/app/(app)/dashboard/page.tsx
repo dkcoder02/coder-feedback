@@ -1,5 +1,6 @@
 "use client";
 import { MessageCard } from "@/components/MessageCard";
+import { ToolTip } from "@/components/ToolTip";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -122,9 +123,7 @@ export default function UserDashboard() {
 
   const { username } = session.user as User;
 
-  //TODO: do more research on how to get the base url
-
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  const baseUrl = `${window.location.origin}`;
   const profileUrl = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = () => {
@@ -148,7 +147,9 @@ export default function UserDashboard() {
             disabled
             className="input input-bordered w-full p-2 mr-2"
           />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <ToolTip message="Copy to clipboard">
+            <Button onClick={copyToClipboard}>Copy</Button>
+          </ToolTip>
         </div>
       </div>
 
