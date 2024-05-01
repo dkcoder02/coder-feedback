@@ -9,19 +9,16 @@ export async function GET(request: Request) {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
-  const user: User = session?.user;
+  const _user: User = session?.user;
 
-  if (!user || !session) {
+  if (!_user || !session) {
     return Response.json(
-      {
-        message: "Unauthorized",
-        success: false,
-      },
+      { success: false, message: "Not authenticated" },
       { status: 401 }
     );
   }
 
-  const userId = new mongoose.Types.ObjectId(user._id);
+  const userId = new mongoose.Types.ObjectId(_user._id);
 
   try {
     // $unwind is used to deconstruct the array of messages
@@ -49,7 +46,7 @@ export async function GET(request: Request) {
           },
         },
       },
-    ]);
+    ]).exec();
 
     if (!user || user.length === 0) {
       return Response.json(
@@ -63,8 +60,8 @@ export async function GET(request: Request) {
 
     return Response.json(
       {
-        message: user[0].messages,
-        success: false,
+        messages: user[0].messages,
+        success: true,
       },
       { status: 200 }
     );

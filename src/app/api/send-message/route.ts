@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
     const newMessage = {
       content,
-      createAt: new Date(),
+      createdAt: new Date(),
     };
 
     user.messages.push(newMessage as Message);
