@@ -40,7 +40,7 @@ export default function UserDashboard() {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get<ApiResponse>("/api/accept-messages");
-      setValue("acceptMessages", response.data.isAcceptMessages);
+      setValue("acceptMessages", response.data.isAcceptingMessages);
     } catch (error) {
       console.error("Error fetching accept messages", error);
       const axiosError = error as AxiosError<ApiResponse>;
