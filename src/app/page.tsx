@@ -23,6 +23,14 @@ import {
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const specialChar = "||";
 
@@ -31,7 +39,7 @@ const parseStringMessages = (messageString: string): string[] => {
 };
 
 const initialMessageString =
-  "What's your favorite movie?||Do you have any pets?||What's your dream job?";
+  "What's your next goal for mytube product features?||How do solve real life problems using this product ?||What's your future planning for the amazing product?";
 
 export default function SendMessage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,8 +54,8 @@ export default function SendMessage() {
     initialCompletion: initialMessageString,
   });
 
-  const params = useParams<{ username: string }>();
   const { toast } = useToast();
+  const { setTheme } = useTheme();
 
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -56,7 +64,7 @@ export default function SendMessage() {
   const { watch, setValue, getValues, reset } = form;
 
   const content = watch("content");
-  const username = params.username;
+  const username = "krish";
 
   const handleMessageClick = (message: string) => {
     setValue("content", message);
@@ -102,9 +110,32 @@ export default function SendMessage() {
   };
 
   return (
-    <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
+    <div className="container mx-auto my-8 p-6  rounded max-w-4xl">
+      <div className="flex justify-end">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+              <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setTheme("light")}>
+              Light
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("dark")}>
+              Dark
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("system")}>
+              System
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       <h1 className="text-4xl font-bold mb-6 text-center">
-        Public Profile Link
+        Send Your Feedback
       </h1>
 
       <Form {...form}>
@@ -175,10 +206,7 @@ export default function SendMessage() {
       </div>
       <Separator className="my-6" />
       <div className="text-center">
-        <div className="mb-4">Get Your Message Board</div>
-        <Link href={"/sign-up"}>
-          <Button>Create Your Account</Button>
-        </Link>
+        <div className="mb-4">Thank you</div>
       </div>
     </div>
   );
