@@ -63,7 +63,7 @@ export default function SendMessage() {
   const { watch, setValue, getValues, reset } = form;
 
   const content = watch("content");
-  const username = "krish";
+  const username = "kd";
 
   const handleMessageClick = (message: string) => {
     setValue("content", message);
