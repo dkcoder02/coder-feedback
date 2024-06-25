@@ -1,6 +1,4 @@
-import MistralClient, {
-  ChatCompletionResponseChunk,
-} from "@mistralai/mistralai";
+import MistralClient from "@mistralai/mistralai";
 import { MistralStream, StreamingTextResponse } from "ai";
 import { NextRequest } from "next/server";
 
@@ -11,12 +9,11 @@ export async function POST(req: NextRequest) {
     const prompt =
       "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous video streaming platform feature";
 
-    const response: AsyncGenerator<ChatCompletionResponseChunk, void, unknown> =
-      mistral.chatStream({
-        model: "open-mixtral-8x22b",
-        maxTokens: 200,
-        messages: [{ role: "user", content: prompt }],
-      });
+    const response: any = mistral.chatStream({
+      model: "open-mixtral-8x22b",
+      maxTokens: 200,
+      messages: [{ role: "user", content: prompt }],
+    });
 
     const stream = MistralStream(response);
     return new StreamingTextResponse(stream);
